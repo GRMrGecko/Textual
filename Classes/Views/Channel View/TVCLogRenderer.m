@@ -507,56 +507,168 @@ static NSInteger getNextAttributeRange(attr_t *attrBuf, NSInteger start, NSInteg
 {
 	/* Normal keyword matching. Partial and absolute. */
 	BOOL foundKeyword = NO;
-
-	for (NSString *keyword in keywrods) {
-		NSInteger start = 0;
-		NSInteger length = [_body length];
-
-		while (start < length) {
-			NSRange r = [_body rangeOfString:keyword
-									 options:NSCaseInsensitiveSearch
-									   range:NSMakeRange(start, (length - start))];
-
-			if (r.location == NSNotFound) {
-				break;
-			}
-
-			BOOL enabled = YES;
-
-			for (NSValue *e in excludedRanges) {
-				if (NSIntersectionRange(r, [e rangeValue]).length > 0) {
-					enabled = NO;
-
-					break;
+	
+	
+	NSString *curchan = [[_controller associatedChannel].name lowercaseString];
+	
+	NSString *curnick = [_rendererAttributes[@"nickname"] lowercaseString];
+	
+	/* Normal keyword matching. Partial and absolute. */
+	for (__strong NSString *keyword in keywrods) {
+		BOOL continueSearch = YES;
+		
+		/*
+		 
+		 Any highlighted words which contains a ; followed by a + or - can be used to filter down to a specific user or channel.
+		 
+		 The logic for the filters is as followed.
+		 To included a channel or nick name, use the + symbol.
+		 To exclude a channel or nick name, use the - symbol.
+		 
+		 If you have channels included but not excluded then:
+		 Only channels included will receive highlight.
+		 If you also have channels excluded then:
+		 Any channels excluded will not receive highlight.
+		 
+		 If you have nicknames included but not excluded then:
+		 Only nicknames included will receive highlight.
+		 If you have nicknames excluded then:
+		 Any nicknames excluded will not receive highlight.
+		 
+		 Example Usuage:
+		 Only highlight on this channel:
+		 highlight;+#channel
+		 
+		 Only highlight on this channel but not if it's this user:
+		 highlight;+#channel -nickname
+		 
+		 Only highlight if it's not this channel:
+		 highlight;-#channel
+		 
+		 Only highlight if it's not this user:
+		 highlight;-nickname
+		 
+		 */
+		
+		if ([keyword contains:@";"] &&
+			([keyword contains:@"-"] || [keyword contains:@"+"])) {
+			
+			NSRange range = [keyword rangeOfString:@";" options:NSBackwardsSearch];
+			
+			NSArray *limitList = [[keyword substringFromIndex:range.location+range.length] split:NSStringWhitespacePlaceholder];
+			
+			keyword = [keyword substringToIndex:range.location];
+			
+			NSMutableArray *includeChannels		= [NSMutableArray array];
+			NSMutableArray *excludeChannels		= [NSMutableArray array];
+			NSMutableArray *includeNicks		= [NSMutableArray array];
+			NSMutableArray *excludeNicks		= [NSMutableArray array];
+			
+			for (__strong NSString *limit in limitList) {
+				BOOL include = [limit hasPrefix:@"+"];
+				BOOL exclude = [limit hasPrefix:@"-"];
+				
+				if (exclude == NO && include == NO) {
+					continue;
 				}
-			}
-
-			if (enabled) {
-				if ([TPCPreferences highlightMatchingMethod] == TXNicknameHighlightExactMatchType) {
-					enabled = [self sectionOfBodyIsSurroundedByNonAlphabeticals:r];
-				}
-
-				if (enabled) {
-					if (isClear(_effectAttributes, _rendererURLAttribute, r.location, r.length)) {
-						setFlag(_effectAttributes, _rendererKeywordHighlightAttribute, r.location, r.length);
-
-						foundKeyword = YES;
-
-						break;
+				
+				limit = [limit substringFromIndex:1].lowercaseString;
+				
+				if ([limit hasPrefix:@"#"]) {
+					if (include) {
+						[includeChannels addObject:limit];
+					} else {
+						[excludeChannels addObject:limit];
+					}
+				} else {
+					if (include) {
+						[includeNicks addObject:limit];
+					} else {
+						[excludeNicks addObject:limit];
 					}
 				}
 			}
-
-			start = (NSMaxRange(r) + 1);
+			
+			if (curchan && [curchan hasPrefix:@"#"]) {
+				if (NSObjectIsNotEmpty(includeChannels) &&
+					NSObjectIsEmpty(excludeChannels)) {
+					
+					if ([includeChannels containsObject:curchan] == NO) {
+						continueSearch = NO;
+					}
+				} else {
+					if ([excludeChannels containsObject:curchan]) {
+						continueSearch = NO;
+					}
+				}
+			}
+			
+			if (continueSearch && curnick) {
+				if (NSObjectIsNotEmpty(includeNicks) &&
+					NSObjectIsEmpty(excludeNicks)) {
+					
+					if ([includeNicks containsObject:curnick] == NO) {
+						continueSearch = NO;
+					}
+				} else {
+					if ([excludeNicks containsObject:curnick]) {
+						continueSearch = NO;
+					}
+				}
+			}
 		}
-
-		/* We break after finding a keyword because as long as there is one
-		 amongst many, that is all the end user really cares about. */
-		if (foundKeyword) {
-			break;
+		
+		if (continueSearch) {
+			NSInteger start = 0;
+			NSInteger length = [_body length];
+			
+			while (start < length) {
+				NSRange r = [_body rangeOfString:keyword
+										 options:NSCaseInsensitiveSearch
+										   range:NSMakeRange(start, (length - start))];
+				
+				if (r.location == NSNotFound) {
+					break;
+				}
+				
+				BOOL enabled = YES;
+				
+				for (NSValue *e in excludedRanges) {
+					if (NSIntersectionRange(r, [e rangeValue]).length > 0) {
+						enabled = NO;
+						
+						break;
+					}
+				}
+				
+				if (enabled) {
+					if ([TPCPreferences highlightMatchingMethod] == TXNicknameHighlightExactMatchType) {
+						enabled = [self sectionOfBodyIsSurroundedByNonAlphabeticals:r];
+					}
+					
+					if (enabled) {
+						if (isClear(_effectAttributes, _rendererURLAttribute, r.location, r.length)) {
+							setFlag(_effectAttributes, _rendererKeywordHighlightAttribute, r.location, r.length);
+							
+							foundKeyword = YES;
+							
+							break;
+						}
+					}
+				}
+				
+				start = (NSMaxRange(r) + 1);
+			}
+			
+			/* We break after finding a keyword because as long as there is one
+			 amongst many, that is all the end user really cares about. */
+			if (foundKeyword) {
+				break;
+			}
 		}
+		
 	}
-
+	
 	return foundKeyword;
 }
 

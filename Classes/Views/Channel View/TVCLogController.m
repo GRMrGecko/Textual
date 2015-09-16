@@ -1150,6 +1150,7 @@ NSString * const TVCLogControllerViewFinishedLoadingNotification = @"TVCLogContr
 
 	[rendererAttributes maybeSetObject:[line highlightKeywords] forKey:TVCLogRendererConfigurationHighlightKeywordsAttribute];
 	[rendererAttributes maybeSetObject:[line excludeKeywords] forKey:TVCLogRendererConfigurationExcludedKeywordsAttribute];
+	[rendererAttributes maybeSetObject:[line nickname] forKey:@"nickname"];
 	
 	[rendererAttributes setBool:drawLinks forKey:TVCLogRendererConfigurationShouldRenderLinksAttribute];
 

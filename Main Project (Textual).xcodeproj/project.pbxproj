@@ -976,10 +976,10 @@
 		4CB26C7119529003005F927C /* IRCCommandIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB26C6F19529003005F927C /* IRCCommandIndex.m */; };
 		4CB26C7319529016005F927C /* IRCCommandIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CB26C7219529016005F927C /* IRCCommandIndex.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CB26C7419529016005F927C /* IRCCommandIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CB26C7219529016005F927C /* IRCCommandIndex.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4CB295471B9CB88C002B7972 /* Textual-Extras-MAS.pkg in Resources */ = {isa = PBXBuildFile; fileRef = 4CB295461B9CB88C002B7972 /* Textual-Extras-MAS.pkg */; settings = {ASSET_TAGS = (); }; };
-		4CB2954D1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CB2954C1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h */; settings = {ASSET_TAGS = (); }; };
-		4CB2954E1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CB2954C1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h */; settings = {ASSET_TAGS = (); }; };
-		4CB2954F1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CB2954C1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h */; settings = {ASSET_TAGS = (); }; };
+		4CB295471B9CB88C002B7972 /* Textual-Extras-MAS.pkg in Resources */ = {isa = PBXBuildFile; fileRef = 4CB295461B9CB88C002B7972 /* Textual-Extras-MAS.pkg */; };
+		4CB2954D1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CB2954C1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h */; };
+		4CB2954E1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CB2954C1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h */; };
+		4CB2954F1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CB2954C1B9CC8C2002B7972 /* THOPluginProtocolPrivate.h */; };
 		4CB4806F1965345200E0782E /* TVCAnimatedContentNavigationOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CB4806E1965345200E0782E /* TVCAnimatedContentNavigationOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CB480701965345200E0782E /* TVCAnimatedContentNavigationOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CB4806E1965345200E0782E /* TVCAnimatedContentNavigationOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CB9980917C39E83008F56D7 /* THOUnicodeHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB9980817C39E83008F56D7 /* THOUnicodeHelper.m */; };
@@ -2561,7 +2561,7 @@
 		4C83B9061BA9BE4200BD7718 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4C83B90B1BA9BE4200BD7718 /* Chat Filter Extension.bundle */,
+				4C83B90B1BA9BE4200BD7718 /* ChatFilterExtension.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3987,10 +3987,10 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		4C83B90B1BA9BE4200BD7718 /* Chat Filter Extension.bundle */ = {
+		4C83B90B1BA9BE4200BD7718 /* ChatFilterExtension.bundle */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "Chat Filter Extension.bundle";
+			path = ChatFilterExtension.bundle;
 			remoteRef = 4C83B90A1BA9BE4200BD7718 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -5239,6 +5239,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4C24DC861A93CC340098D1BE /* Shared Debug Configuration.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = .tmp/Info.plist;
 				PRODUCT_NAME = Textual;
@@ -5255,6 +5256,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4C24DC871A93CC340098D1BE /* Shared Standard Release Configuration.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = .tmp/Info.plist;
 				PRODUCT_NAME = Textual;
@@ -5309,6 +5311,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4C24DC841A93CC340098D1BE /* Shared App Store Release Configuration.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = .tmp/Info.plist;
 				PRODUCT_NAME = Textual;
